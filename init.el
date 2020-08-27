@@ -6,13 +6,63 @@
 
 (package-initialize)
 
-;; Setup for using use-package
+
+;;-------------------------------------------------------------------------------
+;; Registers
+
+(set-register ?z '(file . "~/.emacs.d/init.el"))
+(set-register ?x '(file . "~/org/core.org"))
+
+
+;;-------------------------------------------------------------------------------
+;; Theme Configuration
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme `cyberpunk-2019 t)
+
+
+;;-------------------------------------------------------------------------------
+;; Font Configuration
+;; Font: https://github.com/source-foundry/Hack
+;; https://gist.github.com/dan-hill/0762d21d0ac891ab501ae401376a3e7c
+;; Dynamically changes font to a larger size for higher dpi monitors.
+
+(defun set-dynamic-frame-face (frame)
+  (interactive)
+  (if window-system
+      (progn
+        (if (> (window-width) 2000)
+            (set-frame-parameter frame 'font "Hack 12")
+         (set-frame-parameter frame 'font "Hack 11")))))
+
+(set-dynamic-frame-face nil)
+
+(push 'set-dynamic-frame-face after-make-frame-functions)
+
+
+;;-------------------------------------------------------------------------------
+;; Startup Configuration
+
+(setq initial-buffer-choice "~/org/core.org")
+
+
+;;-------------------------------------------------------------------------------
+;; use-package
+;; https://github.com/jwiegley/use-package
+;; Allows tidy package configuration.
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
 
-;; Diminish cleans up the mode-line by allowing you to hide minor mode names.
+
+;;-------------------------------------------------------------------------------
+;; Diminish
+;; https://github.com/emacsmirror/diminish
+;; Implements hiding or abbreviation of the mode line displays
+;; (lighters) of minor-modes.
+
 (use-package diminish
   :ensure t)
 
@@ -102,44 +152,26 @@
 ;; ox-hugo
 ;; https://ox-hugo.scripter.co/
 ;; Exports org files to hugo
+
 (use-package ox-hugo
   :ensure t
   :after ox)
 
 
-
-(set-register ?z '(file . "~/.emacs.d/init.el"))
-(set-register ?x '(file . "~/org/core.org"))
-
-
-(load-theme 'cyberpunk-2019 t)
-
-(setq initial-buffer-choice "~/org/core.org")
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("d1cc05d755d5a21a31bced25bed40f85d8677e69c73ca365628ce8024827c9e3" default)))
- '(package-selected-packages
-   (quote
-    (yasnippet elpy org-edna org-depend helm ox-hugo elfeed-org elfeed telephone-line git-auto-commit-mode org-bullets use-package org-trello org-chef diminish cyberpunk-theme))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#000000" :foreground "#d3d3d3" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "SRC" :family "Hack"))))
- '(org-level-1 ((t (:foreground "#ff1493" :height 1.0))))
- '(org-level-2 ((t (:foreground "#ffff00" :height 1.0)))))
-
-;; enable edna for advanced todo dependancies
-(use-package org-edna :ensure t)
+;;-------------------------------------------------------------------------------
+;; org-edna
+;; https://www.nongnu.org/org-edna-el/
+;; Provides advanced todo dependancies.
+(use-package org-edna
+  :ensure t)
 (org-edna-load)
 
-;; enable yasnippet for expandable snippets on all buffers
+
+;;-------------------------------------------------------------------------------
+;; yasnippet
+;; https://github.com/joaotavora/yasnippet
+;; Template system.
+(use-package yasnippet
+  :ensure t)
 (yas-global-mode)
+
