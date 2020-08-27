@@ -175,3 +175,10 @@
   :ensure t)
 (yas-global-mode)
 
+;;-------------------------------------------------------------------------------
+;; gitignore-mode
+;; https://github.com/magit/git-modes/
+;; Major mode for editing .gitignore files.
+
+(use-package gitignore-mode
+  :ensure t)
